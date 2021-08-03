@@ -1,0 +1,446 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "PrimX API ",
+        "description": "This group contains endpoints for user authentication and Product and Stock Management",
+        "contact": {
+            "email": "ankitapurohit41@gmail.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://127.0.0.1:8000",
+            "description": "User Authentication and Registration"
+        }
+    ],
+    "paths": {
+        "/api/products": {
+            "get": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "get Product List",
+                "description": "get Product List with stock as optional parameter. Also sorting by stock on hand and filter by availability is supported as optional parameters",
+                "operationId": "getProducts",
+                "parameters": [
+                    {
+                        "name": "stock",
+                        "in": "query",
+                        "description": "set if want to get stock summary",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "set if want to use pagination. ",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProductResource"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "422": {
+                        "description": "Invalid Input"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/api/register": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Create new User",
+                "description": "Create new User with given info",
+                "operationId": "RegisterUser",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "422": {
+                        "description": "Invalid Input"
+                    }
+                }
+            }
+        },
+        "/api/login": {
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Authenticate User",
+                "description": "Authenticate User and provides token on success",
+                "operationId": "LoginrUser",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "422": {
+                        "description": "Invalid Input"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Product": {
+                "title": "Product",
+                "description": "Product model",
+                "properties": {
+                    "id": {
+                        "title": "ID",
+                        "description": "ID",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "code": {
+                        "title": "Code",
+                        "description": "Code of the product",
+                        "type": "string",
+                        "example": "P00001"
+                    },
+                    "name": {
+                        "title": "Name",
+                        "description": "Name of the product",
+                        "type": "string",
+                        "example": "Product1"
+                    },
+                    "description": {
+                        "title": "Description",
+                        "description": "Description of the product",
+                        "type": "string",
+                        "example": "This is product's description"
+                    },
+                    "created_at": {
+                        "title": "Created at",
+                        "description": "Created at",
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2020-01-27 17:50:45"
+                    },
+                    "updated_at": {
+                        "title": "Updated at",
+                        "description": "Updated at",
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2020-01-27 17:50:45"
+                    },
+                    "deleted_at": {
+                        "title": "Deleted at",
+                        "description": "Deleted at",
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2020-01-27 17:50:45"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "Product"
+                }
+            },
+            "Stock": {
+                "title": "Stock",
+                "description": "Stock model",
+                "properties": {
+                    "id": {
+                        "title": "ID",
+                        "description": "ID",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "product_id": {
+                        "title": "Product ID",
+                        "description": "ID of the product",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "on_hand": {
+                        "title": "On hand",
+                        "description": "Quantity of Hand of the product",
+                        "type": "integer",
+                        "example": "2"
+                    },
+                    "taken": {
+                        "title": "Taken",
+                        "description": "Quantity of the product taken",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "production_date": {
+                        "title": "Production Date",
+                        "description": "Production Date of the product",
+                        "type": "string",
+                        "format": "date",
+                        "example": "2020-01-27"
+                    },
+                    "created_at": {
+                        "title": "Created at",
+                        "description": "Created at",
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2020-01-27 17:50:45"
+                    },
+                    "updated_at": {
+                        "title": "Updated at",
+                        "description": "Updated at",
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2020-01-27 17:50:45"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "Stock"
+                }
+            },
+            "User": {
+                "title": "User",
+                "description": "User model",
+                "properties": {
+                    "id": {
+                        "title": "ID",
+                        "description": "ID",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "name": {
+                        "title": "Name",
+                        "description": "Name of User",
+                        "example": "Jane"
+                    },
+                    "email": {
+                        "title": "Email",
+                        "description": "Email of the user",
+                        "type": "string",
+                        "example": "jane@doe.com"
+                    },
+                    "password": {
+                        "title": "Password",
+                        "description": "Password of the user",
+                        "type": "string",
+                        "example": "123456"
+                    },
+                    "token": {
+                        "title": "Token",
+                        "description": "Token of the user",
+                        "type": "string",
+                        "example": "11|nfksfasklmasdsasdasdsadas"
+                    },
+                    "created_at": {
+                        "title": "Created at",
+                        "description": "Created at",
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2020-01-27 17:50:45"
+                    },
+                    "updated_at": {
+                        "title": "Updated at",
+                        "description": "Updated at",
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2020-01-27 17:50:45"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "User"
+                }
+            },
+            "ProductRequest": {
+                "title": "Product request",
+                "description": "Product Request",
+                "required": [
+                    "code",
+                    "name"
+                ],
+                "properties": {
+                    "id": {
+                        "title": "ID",
+                        "description": "ID",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "code": {
+                        "title": "Code",
+                        "description": "Code of the product",
+                        "type": "string",
+                        "example": "P00001"
+                    },
+                    "name": {
+                        "title": "Name",
+                        "description": "Name of the product",
+                        "type": "string",
+                        "example": "Product1"
+                    },
+                    "description": {
+                        "title": "Description",
+                        "description": "Description of the product",
+                        "type": "string",
+                        "example": "This is product's description"
+                    }
+                },
+                "type": "object"
+            },
+            "ProductResource": {
+                "title": "ProductResource",
+                "description": "Product resource",
+                "properties": {
+                    "data": {
+                        "title": "Data",
+                        "description": "Data wrapper"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "ProductResource"
+                }
+            },
+            "StockResource": {
+                "title": "StockResource",
+                "description": "Stock resource",
+                "properties": {
+                    "data": {
+                        "title": "Data",
+                        "description": "Data wrapper"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "StockResource"
+                }
+            },
+            "StockRequest": {
+                "title": "Product Stock request",
+                "description": "Product Stock Request",
+                "required": [
+                    "product_id",
+                    "on_hand",
+                    "production_date"
+                ],
+                "properties": {
+                    "product_id": {
+                        "title": "Product ID",
+                        "description": "ID of the product",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "on_hand": {
+                        "title": "On hand",
+                        "description": "Quantity of Hand of the product",
+                        "type": "integer",
+                        "example": "2"
+                    },
+                    "taken": {
+                        "title": "Taken",
+                        "description": "Quantity of the product taken",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "production_date": {
+                        "title": "Production Date",
+                        "description": "Production Date of the product",
+                        "type": "string",
+                        "format": "date",
+                        "example": "2020-01-27"
+                    }
+                },
+                "type": "object"
+            },
+            "UserRequest": {
+                "title": "User request",
+                "description": "User Request",
+                "required": [
+                    "email",
+                    "password"
+                ],
+                "properties": {
+                    "name": {
+                        "title": "Name",
+                        "description": "Name of User",
+                        "example": "Jane"
+                    },
+                    "email": {
+                        "title": "Email",
+                        "description": "Email of the user",
+                        "type": "string",
+                        "example": "jane@doe.com"
+                    },
+                    "password": {
+                        "title": "Password",
+                        "description": "Password of the user",
+                        "type": "string",
+                        "example": "123456"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "bearer_token": {
+                "type": "apiKey",
+                "description": "Enter token in format (Bearer <token>)",
+                "name": "Authorization",
+                "in": "header"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Product",
+            "description": "API Endpoints of Product Management"
+        },
+        {
+            "name": "User",
+            "description": "API Endpoints of Product Management"
+        }
+    ],
+    "security": [
+        {
+            "bearer_token": []
+        }
+    ]
+}
